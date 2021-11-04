@@ -6,11 +6,6 @@ from random import uniform
 import converter
 import utm
 
-from map import Map
-
-import os
-from dotenv import load_dotenv
-
 class Generator:
     polar_coordinates = []
     cartesian_coordinates = []
