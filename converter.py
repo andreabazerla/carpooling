@@ -1,7 +1,10 @@
 import numpy as np
 import math
 
-def cartesian_2_polar(x, y):
+def cartesian_2_polar(cartesian_coordinate):
+    x = cartesian_coordinate[0]
+    y = cartesian_coordinate[1]
+
     rho = np.sqrt(x**2 + y**2)
 
     if (x == 0):
@@ -17,9 +20,13 @@ def cartesian_2_polar(x, y):
         else:
             phi = np.arctan2(y, x) + 2*np.pi
     
-    return(rho, math.degrees(phi))
+    return (rho, math.degrees(phi))
 
-def polar_2_cartesian(rho, phi):
+def polar_2_cartesian(polar_coordinate):
+    rho = polar_coordinate[0]
+    phi = polar_coordinate[1]
+
     x = rho * np.cos(phi)
     y = rho * np.sin(phi)
-    return(x, y)
+    
+    return (x, y)

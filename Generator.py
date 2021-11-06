@@ -3,6 +3,7 @@ import random
 import matplotlib.pyplot as plt
 from scipy.stats import truncnorm
 from random import uniform
+from Point import Point
 import converter
 import utm
 
@@ -11,8 +12,8 @@ class Generator:
     cartesian_coordinates = []
     geographic_coordinates = []
 
-    def __init__(self, center, students_number, drivers_percentage, mean, sd, low, upp):
-        self.center = center
+    def __init__(self, origin, students_number, drivers_percentage, mean, sd, low, upp):
+        self.origin = origin
         self.students_number = students_number
         self.drivers_percentage = drivers_percentage
         self.mean = mean
@@ -81,40 +82,18 @@ class Generator:
         plt.scatter(cartesian_coordinates_unzipped[0], cartesian_coordinates_unzipped[1])
         plt.show()
 
-    def polar_2_cartesian(self, polar_coordinates):
-        cartesian_coordinates = []
-        for polar_point in polar_coordinates:
-            rho = polar_point[0]
-            phi = polar_point[1]
-            cartesian_coordinates.append(converter.polar_2_cartesian(rho, phi))
-        self.cartesian_coordinates = cartesian_coordinates
-        return cartesian_coordinates
-
-    def get_translation(self, center):
-        origin = utm.from_latlon(center[0], center[1])
-        return (origin[0], origin[1])
-
-    def cartesian_2_geographic(self, cartesian_coordinates, origin):
-        origin_x = origin[0]
-        origin_y = origin[1]
-        
-        geographic_coordinates = []
-        for cartesian_point in cartesian_coordinates:
-            cartesian_point_translated = (cartesian_point[0] + origin_x, cartesian_point[1] + origin_y)
-            cartesian_point_x = cartesian_point_translated[0]
-            cartesian_point_y = cartesian_point_translated[1]
-            geographic_coordinates.append(utm.to_latlon(cartesian_point_x, cartesian_point_y, 32, 'T'))
-        
-        self.geographic_coordinates = geographic_coordinates
-
-        return geographic_coordinates
-
     def get_students_coordinates(self):
         polar_coordinates = self.coordinates_2_polar(self.get_random_distance(), self.get_random_angles())
-        cartesian_coordinates = self.polar_2_cartesian(polar_coordinates)
-        geographic_coordinates = self.cartesian_2_geographic(cartesian_coordinates, self.get_translation(self.center))
-        random.shuffle(geographic_coordinates)
-        return geographic_coordinates
+
+        students_coordinates = []
+        for polar_point in polar_coordinates:
+            students_coordinates.append(Point(origin=self.origin, polar_coordinate=polar_point))
+
+        for i in students_coordinates:
+            self.cartesian_coordinates.append(i.get_cartesian_coordinate())
+            self.geographic_coordinates.append(i.get_geographic_coordinate())
+        
+        return students_coordinates
 
     def get_drivers_number(self):
         return int(self.drivers_percentage * self.students_number / 100)
