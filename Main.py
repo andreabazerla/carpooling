@@ -1,8 +1,5 @@
-import replit
+from replit import clear
 from Generator import Generator
-
-def clear():
-    replit.clear()
 
 clear()
 
