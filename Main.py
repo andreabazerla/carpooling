@@ -1,8 +1,8 @@
-import os
-
+import replit
 from Generator import Generator
 
-clear = lambda: os.system('clear')
+def clear():
+    replit.clear()
 
 clear()
 
