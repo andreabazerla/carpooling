@@ -1,12 +1,12 @@
-from math import dist
-import random
 import matplotlib.pyplot as plt
 from scipy.stats import truncnorm
 from random import uniform
 from Point import Point
-import converter
-import utm
-
+import networkx as nx
+from Map import Map
+from dotenv.main import load_dotenv
+import os
+from StudentType import StudentType
 class Generator:
     polar_coordinates = []
     cartesian_coordinates = []
@@ -105,3 +105,61 @@ class Generator:
     def get_passengers_coordinates(self, students_coordinates):
         drivers_number = self.get_drivers_number()
         return students_coordinates[drivers_number:]
+
+    def show_graph(self, drivers_coordinates, passengers_coordinates):
+
+
+        idx = 0
+
+        drivers_nodes = []
+        for driver_coordinates in drivers_coordinates:
+            drivers_nodes.append((idx, {'type': StudentType.DRIVER.value,
+                'polar_coordinate': driver_coordinates.get_polar_coordinate(),
+                'cartesian_coordinate': driver_coordinates.get_cartesian_coordinate(),
+                'geographic_coordinate': driver_coordinates.get_geographic_coordinate(),
+            }))
+            idx = idx + 1
+
+        passengers_nodes = []
+        for passenger_coordinates in passengers_coordinates:
+            passengers_nodes.append((idx, {'type': StudentType.PASSENGER.value,
+                'polar_coordinate': passenger_coordinates.get_polar_coordinate(),
+                'cartesian_coordinate': passenger_coordinates.get_cartesian_coordinate(),
+                'geographic_coordinate': passenger_coordinates.get_geographic_coordinate(),    
+            }))
+            idx = idx + 1
+
+        G = nx.Graph()
+
+        students_nodes = [*drivers_nodes, *passengers_nodes]
+
+        G.add_nodes_from(students_nodes)
+
+        pos = []
+        for i in students_nodes:
+            pos.append(i[1]['cartesian_coordinate'])
+
+        node_color = []
+        for student_node in G.nodes(data=True):
+            if student_node[1]['type'] == 0:
+                node_color.append('yellow')
+            elif student_node[1]['type'] == 1:
+                node_color.append('blue')
+
+        options = {
+            'node_size': 50,
+        }
+
+        nx.draw(G, with_labels=True, node_color=node_color, pos=pos, **options)
+        plt.show()
+    
+    def show_map(self, origin, upp, drivers_coordinates, passengers_coordinates):
+        load_dotenv()
+
+        MAPS_JAVASCRIPT_API = os.getenv('MAPS_JAVASCRIPT_API')
+
+        gmap = Map(MAPS_JAVASCRIPT_API, 'map.html', origin, upp, drivers_coordinates, passengers_coordinates)
+
+        gmap.build_map()
+        gmap.draw_map()
+        gmap.show_map()

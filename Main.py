@@ -41,7 +41,7 @@ def print_menu_show_instance():
     print()
 
 def generate_instance():
-    global instance_generated, generator
+    global instance_generated, generator, drivers_coordinates, passengers_coordinates, ORIGIN, upp
     clear()
     
     print('Insert instance data\n')
@@ -113,9 +113,9 @@ if __name__=='__main__':
                 elif menu_show_instance_option == 4:
                     generator.show_cartesian_coordinates()
                 elif menu_show_instance_option == 5:
-                    pass
+                    generator.show_graph(drivers_coordinates, passengers_coordinates)
                 elif menu_show_instance_option == 6:
-                    pass
+                    generator.show_map(ORIGIN, upp, drivers_coordinates, passengers_coordinates)
                 elif menu_show_instance_option == 0:
                     clear()
                     break
