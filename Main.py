@@ -9,7 +9,7 @@ menu_options = {
     1: 'Generate new instance',
     2: 'Show instance data',
     3: 'Exit',
-}
+} 
 
 menu_options_show_instance = {
     1: 'Show distance histogram',
@@ -28,13 +28,6 @@ def print_menu():
         if key == 2 and instance_generated == False:
             continue
         print(str(key) + ')', menu_options[key])
-    print()
-
-def print_menu_show_instance():
-    print('Show instance')
-    
-    for key in menu_options_show_instance.keys():
-        print(str(key) + ')', menu_options_show_instance[key])
     print()
 
 def generate_instance():
@@ -63,6 +56,13 @@ def generate_instance():
     passengers_coordinates = generator.get_passengers_coordinates(students_coordinates)
 
     instance_generated = True
+
+def print_menu_show_instance():
+    print('Show instance')
+    
+    for key in menu_options_show_instance.keys():
+        print(str(key) + ')', menu_options_show_instance[key])
+    print()
 
 def show_instance():
     clear()
@@ -110,7 +110,8 @@ if __name__=='__main__':
                 elif menu_show_instance_option == 4:
                     generator.show_cartesian_coordinates()
                 elif menu_show_instance_option == 5:
-                    generator.show_graph(drivers_coordinates, passengers_coordinates)
+                    origin_coordinates = generator.get_origin_coordinates()
+                    generator.show_graph(origin_coordinates, drivers_coordinates, passengers_coordinates)
                 elif menu_show_instance_option == 6:
                     generator.show_map(ORIGIN, upp, drivers_coordinates, passengers_coordinates)
                 elif menu_show_instance_option == 0:
