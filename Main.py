@@ -8,7 +8,7 @@ instance_generated = False
 menu_options = {
     1: 'Generate new instance',
     2: 'Show instance data',
-    3: 'Exit',
+    0: 'Exit',
 } 
 
 menu_options_show_instance = {
@@ -58,7 +58,7 @@ def generate_instance():
     instance_generated = True
 
 def print_menu_show_instance():
-    print('Show instance')
+    print('Show instance\n')
     
     for key in menu_options_show_instance.keys():
         print(str(key) + ')', menu_options_show_instance[key])
@@ -90,38 +90,43 @@ if __name__=='__main__':
             print('Instance created :)\n')
             continue
         if menu_option == 2:
-            while(True):
-                clear()
-                print_menu_show_instance()
-                
-                menu_show_instance_option = ''
-                
-                try:
-                    menu_show_instance_option = int(input('Enter your choice: '))
-                except:
-                    print('Wrong input. Please enter a valid number...')
+            if instance_generated == True:
+                while(True):
+                    clear()
+                    print_menu_show_instance()
+                    
+                    menu_show_instance_option = ''
+                    
+                    try:
+                        menu_show_instance_option = int(input('Enter your choice: '))
+                    except:
+                        print('Wrong input. Please enter a valid number...')
 
-                if menu_show_instance_option == 1:
-                    generator.show_distances_distribution()
-                elif menu_show_instance_option == 2:
-                    generator.show_angles_distribution()
-                elif menu_show_instance_option == 3:
-                    generator.show_polar_coordinates()
-                elif menu_show_instance_option == 4:
-                    generator.show_cartesian_coordinates()
-                elif menu_show_instance_option == 5:
-                    origin_coordinates = generator.get_origin_coordinates()
-                    generator.show_graph(origin_coordinates, drivers_coordinates, passengers_coordinates)
-                elif menu_show_instance_option == 6:
-                    generator.show_map(ORIGIN, upp, drivers_coordinates, passengers_coordinates)
-                elif menu_show_instance_option == 0:
-                    clear()
-                    break
-                else:
-                    clear()
-                    print('Invalid option. Please enter a valid number...')
-                
-        elif menu_option == 3:
+                    if menu_show_instance_option == 1:
+                        generator.show_distances_distribution()
+                    elif menu_show_instance_option == 2:
+                        generator.show_angles_distribution()
+                    elif menu_show_instance_option == 3:
+                        generator.show_polar_coordinates()
+                    elif menu_show_instance_option == 4:
+                        generator.show_cartesian_coordinates()
+                    elif menu_show_instance_option == 5:
+                        origin_coordinates = generator.get_origin_coordinates()
+                        generator.show_graph(origin_coordinates, drivers_coordinates, passengers_coordinates)
+                    elif menu_show_instance_option == 6:
+                        generator.show_map(ORIGIN, upp, drivers_coordinates, passengers_coordinates)
+                    elif menu_show_instance_option == 0:
+                        clear()
+                        break
+                    else:
+                        clear()
+                        print('Invalid option. Please enter a valid number...')
+            else:
+                clear()
+                print('Invalid option. Please enter a valid number...')
+                continue
+                    
+        elif menu_option == 0:
             exit()
         else:
             clear()

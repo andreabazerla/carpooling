@@ -109,6 +109,16 @@ class Generator:
         drivers_number = self.get_drivers_number()
         return students_coordinates[drivers_number:]
 
+    def driver_exists(self, graph):
+        for i in graph:
+            if i[1]['type'] == NodeType.DRIVER.value:
+                return True
+    
+    def set_edge(self, i, j, graph):
+        if i[0] != j[0]:
+            if (i[1]['type'] == NodeType.DRIVER.value and j[1]['type'] != NodeType.DRIVER.value) or (i[1]['type'] == NodeType.PASSENGER.value and j[1]['type'] == NodeType.ORIGIN.value) or (i[1]['type'] == NodeType.PASSENGER.value and j[1]['type'] == NodeType.PASSENGER.value and self.driver_exists(graph)):
+                return True
+
     def show_graph(self, origin_coordinates, drivers_coordinates, passengers_coordinates):
         idx = 0
 
@@ -146,7 +156,7 @@ class Generator:
         passengers_edge_list = []
         for i in G.nodes(data=True):
             for j in G.nodes(data=True):
-                if i[0] != j[0] and i[1]['type'] != NodeType.DRIVER.value and (j[1]['type'] != NodeType.DRIVER.value or j[1]['type'] != NodeType.ORIGIN.value):
+                if self.set_edge(i, j, G.nodes(data=True)):
                     passengers_edge_list.append((i[0], j[0]))
 
         pos = []
