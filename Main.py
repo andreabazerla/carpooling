@@ -69,7 +69,7 @@ def show_instance():
 
 print('Operative Research - A.A. 2020/21\n')
 print('Andrea Bazerla - 151792')
-print('Taoufik Soudi - 124485')
+print('Taoufik Souidi - 124485')
 print()
 
 if __name__=='__main__':
