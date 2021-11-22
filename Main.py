@@ -81,6 +81,7 @@ if __name__=='__main__':
         print_menu()
         
         menu_option = ''
+        sub_menu = False
         
         try:
             menu_option = int(input('Enter your choice: '))
@@ -102,7 +103,7 @@ if __name__=='__main__':
                     output = False
                     
                     print_menu_show_instance()
-                    
+                
                     menu_show_instance_option = ''
                     
                     try:
@@ -132,13 +133,14 @@ if __name__=='__main__':
                         generator.show_map(ORIGIN, upp, drivers_coordinates, passengers_coordinates)
                     elif menu_show_instance_option == 0:
                         clear()
+                        sub_menu = True
                         break
                     else:
                         clear()
-                        print('Invalid option. Please enter a valid number...\n')
+                        print('Invalid option. Please enter a valid number...(1)\n')
             else:
                 clear()
-                print('Invalid option. Please enter a valid number...\n')
+                print('Invalid option. Please enter a valid number...(2)\n')
                 continue
 
         if menu_option == 3:
@@ -151,5 +153,8 @@ if __name__=='__main__':
             clear()
             exit()
         else:
-            clear()
-            print('Invalid option. Please enter a valid number...\n')
+            if sub_menu == True:
+                sub_menu = False
+            else:
+                clear()
+                print('Invalid option. Please enter a valid number...(3)\n')
