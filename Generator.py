@@ -7,6 +7,9 @@ from Map import Map
 from dotenv.main import load_dotenv
 import os
 from NodeType import NodeType
+import math
+from haversine import haversine, Unit
+
 class Generator:
     polar_coordinates = []
     cartesian_coordinates = []
@@ -114,12 +117,21 @@ class Generator:
             if i[1]['type'] == NodeType.DRIVER.value:
                 return True
     
-    def set_edge(self, i, j, graph):
-        if i[0] != j[0]:
-            if (i[1]['type'] == NodeType.DRIVER.value and j[1]['type'] != NodeType.DRIVER.value) or (i[1]['type'] == NodeType.PASSENGER.value and j[1]['type'] == NodeType.ORIGIN.value) or (i[1]['type'] == NodeType.PASSENGER.value and j[1]['type'] == NodeType.PASSENGER.value and self.driver_exists(graph)):
-                return True
+    def get_distance_cartesian(self, i, j):
+        return math.sqrt((i[1]['cartesian_coordinate'][0]-j[1]['cartesian_coordinate'][0])**2+(i[1]['cartesian_coordinate'][1]-j[1]['cartesian_coordinate'][1])**2)
 
-    def show_graph(self, origin_coordinates, drivers_coordinates, passengers_coordinates):
+    def get_distance_geographic(self, i, j):
+        return round(haversine(i[1]['geographic_coordinate'], j[1]['geographic_coordinate'], unit=Unit.METERS))
+
+    def set_edge(self, i, j, graph):
+        if (i[0] != j[0]):
+            if j[1]['type'] == NodeType.ORIGIN.value:
+                return True
+        return False
+
+    def build_graph(self, origin_coordinates, drivers_coordinates, passengers_coordinates):
+        global origin_node
+        
         idx = 0
 
         origin_node = (idx, {'type': NodeType.ORIGIN.value,
@@ -157,14 +169,28 @@ class Generator:
         for i in G.nodes(data=True):
             for j in G.nodes(data=True):
                 if self.set_edge(i, j, G.nodes(data=True)):
-                    passengers_edge_list.append((i[0], j[0]))
+                    passengers_edge_list.append((i[0], j[0], { 'distance': self.get_distance_geographic(i, j) }))
 
+        G.add_edges_from(passengers_edge_list)
+
+        return G
+
+    def get_total_distance(self, G):
+        total_distance = 0
+        
+        for i, j, data in G.edges(data=True):
+            if i == 0:
+                total_distance = total_distance + data['distance']
+        
+        return total_distance
+
+    def show_graph(self, G):
         pos = []
-        for i in nodes:
-            pos.append(i[1]['cartesian_coordinate'])
-
         node_color = []
         for node in G.nodes(data=True):
+
+            pos.append(node[1]['cartesian_coordinate'])
+
             node_type = node[1]['type']
             if node_type == NodeType.ORIGIN.value:
                 node_color.append('red')
@@ -172,8 +198,6 @@ class Generator:
                 node_color.append('yellow')
             elif node_type == NodeType.PASSENGER.value:
                 node_color.append('blue')
-
-        G.add_edges_from(passengers_edge_list)
 
         options = {
             'node_size': 50,

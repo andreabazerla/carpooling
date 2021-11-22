@@ -8,6 +8,7 @@ instance_generated = False
 menu_options = {
     1: 'Generate new instance',
     2: 'Show instance data',
+    3: 'Print total distance',
     0: 'Exit',
 } 
 
@@ -16,16 +17,17 @@ menu_options_show_instance = {
     2: 'Show angle histogram',
     3: 'Show polar coordinates',
     4: 'Show cartesian coordinates',
-    5: 'Show graph',
-    6: 'Show map',
+    5: 'Print total distance',
+    6: 'Show graph',
+    7: 'Show map',
     0: '<- Back',
 }
 
 def print_menu():
-    print('Menu')
+    print('Menu\n')
     
     for key in menu_options.keys():
-        if key == 2 and instance_generated == False:
+        if (key == 2 or key == 3) and instance_generated == False:
             continue
         print(str(key) + ')', menu_options[key])
     print()
@@ -67,7 +69,9 @@ def print_menu_show_instance():
 def show_instance():
     clear()
 
-print('Operative Research - A.A. 2020/21\n')
+clear()
+
+print('Operative Research - University of Ferrara, Italy - .A. 2020/21\n')
 print('Andrea Bazerla - 151792')
 print('Taoufik Souidi - 124485')
 print()
@@ -91,8 +95,12 @@ if __name__=='__main__':
             continue
         if menu_option == 2:
             if instance_generated == True:
+                output = False
                 while(True):
-                    clear()
+                    if output == False:
+                        clear()
+                    output = False
+                    
                     print_menu_show_instance()
                     
                     menu_show_instance_option = ''
@@ -112,22 +120,36 @@ if __name__=='__main__':
                         generator.show_cartesian_coordinates()
                     elif menu_show_instance_option == 5:
                         origin_coordinates = generator.get_origin_coordinates()
-                        generator.show_graph(origin_coordinates, drivers_coordinates, passengers_coordinates)
+                        G = generator.build_graph(origin_coordinates, drivers_coordinates, passengers_coordinates)
+                        clear()
+                        print('Total distance:', str(generator.get_total_distance(G)/1000) + 'km\n')
+                        output = True
                     elif menu_show_instance_option == 6:
+                        origin_coordinates = generator.get_origin_coordinates()
+                        G = generator.build_graph(origin_coordinates, drivers_coordinates, passengers_coordinates)
+                        generator.show_graph(G)
+                    elif menu_show_instance_option == 7:
                         generator.show_map(ORIGIN, upp, drivers_coordinates, passengers_coordinates)
                     elif menu_show_instance_option == 0:
                         clear()
                         break
                     else:
                         clear()
-                        print('Invalid option. Please enter a valid number...')
+                        print('Invalid option. Please enter a valid number...\n')
             else:
                 clear()
-                print('Invalid option. Please enter a valid number...')
+                print('Invalid option. Please enter a valid number...\n')
                 continue
-                    
+
+        if menu_option == 3:
+            origin_coordinates = generator.get_origin_coordinates()
+            G = generator.build_graph(origin_coordinates, drivers_coordinates, passengers_coordinates)
+            clear()
+            print('Total distance:', str(generator.get_total_distance(G)/1000) + 'km\n')
+            output = True
         elif menu_option == 0:
+            clear()
             exit()
         else:
             clear()
-            print('Invalid option. Please enter a valid number...')
+            print('Invalid option. Please enter a valid number...\n')
