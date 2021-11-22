@@ -9,6 +9,7 @@ menu_options = {
     1: 'Generate new instance',
     2: 'Show instance data',
     3: 'Print total distance',
+    4: 'Improve the solution',
     0: 'Exit',
 } 
 
@@ -27,7 +28,7 @@ def print_menu():
     print('Menu\n')
     
     for key in menu_options.keys():
-        if (key == 2 or key == 3) and instance_generated == False:
+        if (key == 2 or key == 3 or key == 4) and instance_generated == False:
             continue
         print(str(key) + ')', menu_options[key])
     print()
@@ -71,7 +72,7 @@ def show_instance():
 
 clear()
 
-print('Operative Research - University of Ferrara, Italy - .A. 2020/21\n')
+print('Operative Research - University of Ferrara, Italy - A.A. 2020/21\n')
 print('Andrea Bazerla - 151792')
 print('Taoufik Souidi - 124485')
 print()
@@ -144,14 +145,21 @@ if __name__=='__main__':
                 continue
 
         if menu_option == 3:
-            origin_coordinates = generator.get_origin_coordinates()
-            G = generator.build_graph(origin_coordinates, drivers_coordinates, passengers_coordinates)
-            clear()
-            print('Total distance:', str(generator.get_total_distance(G)/1000) + 'km\n')
-            output = True
+            if instance_generated == True:
+                origin_coordinates = generator.get_origin_coordinates()
+                G = generator.build_graph(origin_coordinates, drivers_coordinates, passengers_coordinates)
+                clear()
+                print('Total distance:', str(generator.get_total_distance(G)/1000) + 'km\n')
+                output = True
+            else:
+                clear()
+                print('Invalid option. Please enter a valid number...(2)\n')
+                continue
+        
         elif menu_option == 0:
             clear()
             exit()
+        
         else:
             if sub_menu == True:
                 sub_menu = False
