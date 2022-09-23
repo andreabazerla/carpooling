@@ -14,7 +14,7 @@ class Map:
     def build_map(self):
         self.add_marker(marker=self.origin, color='#ff0000')
 
-        labels = [str(x) for x in list(range(len(self.drivers_coordinates) + len(self.passengers_coordinates)))]
+        labels = [str(x) for x in list(range(len(self.drivers_coordinates) + len(self.passengers_coordinates) + 1))]
         
         drivers_coordinates = []
         for i in self.drivers_coordinates:
@@ -24,8 +24,8 @@ class Map:
         for i in self.passengers_coordinates:
             passengers_coordinates.append(i.get_geographic_coordinate())
 
-        self.add_points(points=drivers_coordinates, color='#ffff00', labels=labels[:len(drivers_coordinates)])
-        self.add_points(points=passengers_coordinates, color='#0000ff', labels=labels[len(drivers_coordinates):])
+        self.add_points(points=drivers_coordinates, color='#ffff00', labels=labels[1:len(drivers_coordinates)])
+        self.add_points(points=passengers_coordinates, color='#0000ff', labels=labels[1 + len(drivers_coordinates):])
         self.add_circle(self.origin, self.upp)
 
     def show_map(self):
