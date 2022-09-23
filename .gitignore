@@ -138,9 +138,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
-# VS Code
-.vscode/
-
-# VS Code
-.vscode/
